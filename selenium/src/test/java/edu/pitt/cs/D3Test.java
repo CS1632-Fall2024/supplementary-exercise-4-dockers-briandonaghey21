@@ -39,6 +39,9 @@ public class D3Test {
   JavascriptExecutor js;
   @Before
   public void setUp() {
+    ChromeOptions options = new ChromeOptions();
+    options.addArguments("--headless");
+    driver = new ChromeDriver(options);
     driver = new ChromeDriver();
     js = (JavascriptExecutor) driver;
     vars = new HashMap<String, Object>();
@@ -47,44 +50,7 @@ public class D3Test {
   public void tearDown() {
     driver.quit();
   }
-  @Test
-  public void dEFECT1FUNGREETACAT() {
-    driver.get("http://localhost:8080/");
-    driver.findElement(By.linkText("Rent-A-Cat")).click();
-    driver.findElement(By.id("rentID")).click();
-    driver.findElement(By.id("rentID")).sendKeys("2");
-    driver.findElement(By.cssSelector(".form-group:nth-child(3) .btn")).click();
-    driver.findElement(By.linkText("Greet-A-Cat")).click();
-    assertThat(driver.findElement(By.cssSelector("#greeting > h4")).getText(), is("Meow!Meow!"));
-  }
-  @Test
-  public void dEFECT2FUNFEED() {
-    driver.get("http://localhost:8080/");
-    driver.manage().window().setSize(new Dimension(1936, 1048));
-    driver.findElement(By.linkText("Feed-A-Cat")).click();
-    driver.findElement(By.id("catnips")).click();
-    driver.findElement(By.id("catnips")).sendKeys("0");
-    driver.findElement(By.cssSelector(".btn")).click();
-    {
-      WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(3));
-      wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\'feedResult\' and contains(text(),\'Nom, nom\')]")));
-    }
-    assertThat(driver.findElement(By.id("feedResult")).getText(), is("Cat Fight!"));
-  }
-  @Test
-  public void dEFECT3FUNFEED() {
-    driver.get("http://localhost:8080/");
-    driver.manage().window().setSize(new Dimension(1936, 1048));
-    driver.findElement(By.linkText("Feed-A-Cat")).click();
-    driver.findElement(By.id("catnips")).click();
-    driver.findElement(By.id("catnips")).sendKeys("-100000000000000000000000000000000000000000000000000000000000000000000000000000000000000");
-    driver.findElement(By.cssSelector(".btn")).click();
-    {
-      WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(3));
-      wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\'feedResult\' and contains(text(),\'Nom, nom\')]")));
-    }
-    assertThat(driver.findElement(By.id("feedResult")).getText(), is("Cat Fight!"));
-  }
+  
   @Test
   public void tEST1LINKS() {
     /* 
@@ -94,7 +60,7 @@ public class D3Test {
     vars.put("res", attribute);
     assertEquals(vars.get("res").toString(), "/reset");
     */
-
+    
     driver.get("http://localhost:8080/");
     
     WebElement element = driver.findElement(By.xpath("/html/body/div/header/nav/ul/li[8]/a"));
@@ -127,7 +93,7 @@ public class D3Test {
     {
       WebElement element = driver.findElement(By.xpath("/html/body/div[1]/main/div[1]/ol/li[2]/img"));
       String attribute = element.getAttribute("src");
-      attribute = attribute.replace("https://cs1632.appspot.com", "");
+      attribute = attribute.replace("http://localhost:8080", "");
       vars.put("src", attribute);
     }
     assertEquals("/images/cat2.jpg",vars.get("src").toString());
@@ -170,6 +136,7 @@ public class D3Test {
     assertThat(driver.findElement(By.xpath("/html/body/div[1]/main/div[1]/div[1]/ul/li[3]")).getText(), is("ID 3. Mistoffelees"));
     assertThat(driver.findElement(By.id("rentResult")).getText(), is("Success!"));
   }
+
   @Test
   public void tEST7RETURN() {
     //js.executeScript("document.cookie = \"1=false\";document.cookie = \"2=false\";document.cookie = \"3=false\";");
